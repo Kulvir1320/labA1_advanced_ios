@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, CLLocationManagerDelegate{
+class ViewController: UIViewController, CLLocationManagerDelegate , MKMapViewDelegate{
 
     @IBOutlet weak var mapView: MKMapView!
     
@@ -18,6 +18,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     var locationManager = CLLocationManager()
     var s : CLLocationCoordinate2D?
     var d: CLLocationCoordinate2D?
+    var coordinate: CLLocationCoordinate2D?
+    var drive = true
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,14 +30,62 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        
+        mapView.delegate = self
+        mapView.setRegion(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 43.64, longitude: -79.38) , span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTapGesture.numberOfTapsRequired = 2
         mapView.addGestureRecognizer(doubleTapGesture)
     }
 
-    @objc func doubleTapped(gestureRecognizer: UIGestureRecognizer) {
+    @IBAction func zoomIn(_ sender: UIButton) {
+      var zoom = mapView.region
+        zoom.span.latitudeDelta = zoom.span.latitudeDelta*2
+        zoom.span.longitudeDelta = zoom.span.longitudeDelta*2
+        mapView.setRegion(zoom, animated: true)
+    }
+    
+    @IBAction func zoomOut(_ sender: UIButton) {
         
+        var zoom = mapView.region
+               zoom.span.latitudeDelta = zoom.span.latitudeDelta/2
+               zoom.span.longitudeDelta = zoom .span.longitudeDelta/2
+               mapView.setRegion(zoom, animated: true)
+        
+    }
+    @IBAction func walkingDistance(_ sender: UIButton) {
+        
+        drive = false
+        let overlay = mapView.overlays
+        if overlay.count > 0
+        {
+            mapView.removeOverlays(overlay)
+        }
+      path()
+    }
+    @IBAction func carDistance(_ sender: UIButton) {
+       drive = true
+        let overlay = mapView.overlays
+        if overlay.count > 0 {
+            mapView.removeOverlays(overlay)
+        }
+        path()
+    }
+    @objc func doubleTapped(gestureRecognizer: UIGestureRecognizer) {
+       
+        
+        let allAnotation = mapView.annotations
+        
+        if allAnotation.count > 1{
+            
+            let ar = allAnotation[1]
+            mapView.removeAnnotation(ar)
+        }
+        
+        let overlay = mapView.overlays
+        if overlay.count > 0 {
+            mapView.removeOverlays(overlay)
+        }
+    
         let touchPoint = gestureRecognizer.location(in: mapView)
         let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
        
@@ -42,66 +93,74 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
         
-        s = mapView.annotations[0].coordinate
-        d = mapView.annotations[1].coordinate
+       
+        d = coordinate
+        //count += 1
+       print("annotation")
         
+    }
+    
+    
+    
         
-        let request = MKDirections.Request()
-              request.source = MKMapItem(placemark: MKPlacemark(coordinate: s!, addressDictionary: nil))
-              request.destination = MKMapItem(placemark: MKPlacemark(coordinate: d!, addressDictionary: nil))
-              
-              request.requestsAlternateRoutes = true
-              request.transportType = .automobile
-              
-              let directions = MKDirections(request: request)
-        directions.calculate { [unowned self] response, error in
-                guard let unwrappedResponse = response else { return }
-
-                for route in unwrappedResponse.routes {
-                    self.mapView.addOverlay(route.polyline)
-                    self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                }
-           
-            func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-                      let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-                      renderer.strokeColor = UIColor.blue
-                      return renderer
-                  }
-         
+    @IBAction func findMyWayBtn(_ sender: UIButton) {
+        
+       path()
+            
+                    
         }
-    }
+    
+    func path(){
+        let source = mapView.annotations[0].coordinate
+                 
+                   let sourcePlacemark = MKPlacemark(coordinate: source)
+                   let destinationMark = MKPlacemark(coordinate: d!)
+               
+               let sourceMapItem = MKMapItem(placemark: sourcePlacemark)
+               let destinationMapITem = MKMapItem(placemark: destinationMark)
+                                    
+               
+               let request = MKDirections.Request()
+               request.source = sourceMapItem
+               request.destination = destinationMapITem
+               //request.requestsAlternateRoutes = true
+        request.transportType = drive ? MKDirectionsTransportType.automobile : MKDirectionsTransportType.walking
+                       print("request")
+                                    
+               let directions = MKDirections(request: request)
+                          
+                       directions.calculate { (response, error )in
+                               guard let unwrappedResponse = response else {
+                                   if let e = error {
+                                       print("error")
+                                   }
+                                      return
+                               }
+                           print("response")
+                           let route = unwrappedResponse.routes[0]
+                           self.mapView.addOverlay((route.polyline), level: MKOverlayLevel.aboveRoads)}
         
-      
     }
+    
+                           func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+                            print("renderer")
+                            
+                            if overlay is MKPolyline{
+                                
+                            let renderer = MKPolylineRenderer(overlay: overlay)
+                            renderer.strokeColor = UIColor.blue
+                           
+                                     return renderer
+                                 }
+                        
+            return MKOverlayRenderer()
+        
+    }
+    
+}
+    
+    
 
 
-//        func findMyWayBtn(_ sender: UIButton) {
-//        let request = MKDirections.Request()
-//        request.source = MKMapItem(placemark: MKPlacemark(coordinate: s!, addressDictionary: nil))
-//        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: d!, addressDictionary: nil))
-//
-//        request.requestsAlternateRoutes = true
-//        request.transportType = .automobile
-//
-//        let directions = MKDirections(request: request)
-//
-////        let request = MKDirections.Request()
-////        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 40.7127, longitude: -74.0059), addressDictionary: nil))
-////        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 37.783333, longitude: -122.416667), addressDictionary: nil))
-////        request.requestsAlternateRoutes = true
-////        request.transportType = .automobile
-////
-////        let directions = MKDirections(request: request)
-////
-//        directions.calculate { [unowned self] response, error in
-//            guard let unwrappedResponse = response else { return }
-//
-//            for route in unwrappedResponse.routes {
-//                self.mapView.addOverlay(route.polyline)
-//                self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-//            }
-//        }
-//    }
-   
 
 

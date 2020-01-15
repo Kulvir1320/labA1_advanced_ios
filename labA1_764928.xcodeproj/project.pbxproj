@@ -14,6 +14,9 @@
 		9B7CAE4523CE63BD003C034C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B7CAE4423CE63BD003C034C /* Assets.xcassets */; };
 		9B7CAE4823CE63BD003C034C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B7CAE4623CE63BD003C034C /* LaunchScreen.storyboard */; };
 		9B7CAE5023CE703C003C034C /* locationButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B7CAE4F23CE703C003C034C /* locationButton.png */; };
+		9B7CAE5223CE9DE9003C034C /* car-and-gps-map-pointer-icon-vector-10514678.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9B7CAE5123CE9DE9003C034C /* car-and-gps-map-pointer-icon-vector-10514678.jpg */; };
+		9B7CAE5423CE9DF2003C034C /* download.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9B7CAE5323CE9DF2003C034C /* download.jpeg */; };
+		9B7CAE5623CE9E43003C034C /* 454798-200.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B7CAE5523CE9E43003C034C /* 454798-200.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,9 @@
 		9B7CAE4723CE63BD003C034C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B7CAE4923CE63BD003C034C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B7CAE4F23CE703C003C034C /* locationButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationButton.png; sourceTree = "<group>"; };
+		9B7CAE5123CE9DE9003C034C /* car-and-gps-map-pointer-icon-vector-10514678.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "car-and-gps-map-pointer-icon-vector-10514678.jpg"; sourceTree = "<group>"; };
+		9B7CAE5323CE9DF2003C034C /* download.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = download.jpeg; sourceTree = "<group>"; };
+		9B7CAE5523CE9E43003C034C /* 454798-200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "454798-200.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,9 @@
 		9B7CAE3A23CE63BC003C034C /* labA1_764928 */ = {
 			isa = PBXGroup;
 			children = (
+				9B7CAE5523CE9E43003C034C /* 454798-200.png */,
+				9B7CAE5323CE9DF2003C034C /* download.jpeg */,
+				9B7CAE5123CE9DE9003C034C /* car-and-gps-map-pointer-icon-vector-10514678.jpg */,
 				9B7CAE4F23CE703C003C034C /* locationButton.png */,
 				9B7CAE3B23CE63BC003C034C /* AppDelegate.swift */,
 				9B7CAE3D23CE63BC003C034C /* SceneDelegate.swift */,
@@ -128,10 +137,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B7CAE5623CE9E43003C034C /* 454798-200.png in Resources */,
 				9B7CAE4823CE63BD003C034C /* LaunchScreen.storyboard in Resources */,
 				9B7CAE4523CE63BD003C034C /* Assets.xcassets in Resources */,
 				9B7CAE5023CE703C003C034C /* locationButton.png in Resources */,
 				9B7CAE4323CE63BC003C034C /* Main.storyboard in Resources */,
+				9B7CAE5223CE9DE9003C034C /* car-and-gps-map-pointer-icon-vector-10514678.jpg in Resources */,
+				9B7CAE5423CE9DF2003C034C /* download.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
